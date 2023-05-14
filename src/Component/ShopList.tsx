@@ -1,6 +1,13 @@
-import React, {ChangeEvent, DragEvent} from 'react';
+import React, {ChangeEvent, DragEvent, memo} from 'react';
 import styled from "styled-components";
-import {FilterValue, GoodType, NewShopListType, updateShoplistOrder} from "../reducer/shopListReducer";
+import {
+    addGoodsAC, changeGoodsStatusAC, deleteGoodsAC,
+    deleteShopListAC,
+    FilterValue,
+    GoodType,
+    NewShopListType, updateGoodTitleAC,
+    updateShoplistOrder, updateShoplistTitleAC
+} from "../reducer/shopListReducer";
 import {useDispatch} from "react-redux";
 import {EditableSpan} from "../common/EditableSpan";
 import {AddItemForm} from "../common/AddItemForm";
@@ -14,21 +21,27 @@ type PropsType ={
     thisList: NewShopListType
     currentList: NewShopListType | null
     setCurrentList: (currentList: NewShopListType | null)=>void
-    deleteShopList: (shoplistId: string)=>void
-    updateShoplistTitle: (shoplistId: string, newTitle: string)=>void
-    addGoods: (shoplistId: string, title: string)=>void
     goods: GoodType[]
-    deleteGoods: (shoplistId: string, id: string)=>void
-    updateGoodTitle:(shoplistId: string, goodsId: string, newTitle: string)=>void
     filter: FilterValue
     changeFilterValue:(shoplistId: string, filter: FilterValue)=>void
-    changeGoodsStatus: (shoplistId: string, goodsId: string, inChecked: boolean)=>void
+
 }
-export const ShopList:React.FC<PropsType> = (props) => {
-    const {shoplistId,title, thisList, currentList,goods,filter, setCurrentList,deleteShopList,updateShoplistTitle, addGoods,deleteGoods,updateGoodTitle,changeFilterValue, changeGoodsStatus} = props
+
+export const ShopList:React.FC<PropsType> = memo((props) => {
+    const {shoplistId,title, thisList, currentList,goods,filter, setCurrentList,changeFilterValue,} = props
     const dispatch = useDispatch()
     const [listRef] = useAutoAnimate<HTMLUListElement>()
     //Drop function
+    let filteredGoods: Array<GoodType> = []
+    if (filter === 'All') {
+        filteredGoods = goods
+    }
+    if (filter === 'Not to buy') {
+        filteredGoods =goods.filter(el => el.inCart !== true)
+    }
+    if (filter === 'Bought') {
+        filteredGoods = goods.filter(el => el.inCart === true)
+    }
     function dragStartHandler(e:DragEvent<HTMLDivElement>) {
         setCurrentList(thisList)
     }
@@ -48,33 +61,35 @@ export const ShopList:React.FC<PropsType> = (props) => {
 
     //HandlerFunction
     const deleteTodoListHandler = () => {
-        deleteShopList(shoplistId)
+        dispatch(deleteShopListAC(shoplistId))
     }
     const updateShoplistTitleHandler = (newTitle: string) => {
-        updateShoplistTitle(shoplistId, newTitle)
+        dispatch(updateShoplistTitleAC(shoplistId, newTitle))
     }
     const addGoodHandler = (newTitle: string) => {
-        addGoods(shoplistId, newTitle)
+        dispatch(addGoodsAC(shoplistId, newTitle))
     }
+    const deleteGoodsHandler = (id:string) =>{
+        dispatch(deleteGoodsAC(shoplistId, id))
+    }
+    const updateGoodTitleHandler = (id:string ,newTitle:string) => {
+        dispatch(updateGoodTitleAC(shoplistId, id, newTitle))
+    }
+    const changeGoodsStatusOnChangeHandler = (id:string, e: boolean)=>{
+        dispatch(changeGoodsStatusAC(shoplistId, id, e))
+    }
+
     //map
-    const mappedGoods = goods.map((el) => {
-        const deleteGodsHandler = () =>{
-            deleteGoods(props.shoplistId, el.id)
-        }
-        const updateGoodTitleHandler = (newTitle:string) => {
-            updateGoodTitle(shoplistId, el.id, newTitle)
-        }
-        const changeGoodsStatusOnChangeHandler = (e: ChangeEvent<HTMLInputElement>)=>{
-           changeGoodsStatus(shoplistId, el.id, e.currentTarget.checked)
-        }
+    const mappedGoods = filteredGoods.map((el) => {
+
         return (
             <li key={el.id} className={el.inCart ? 'inCart' : ''}>
                 <div>
-                    <SuperButton title={'x'} callBack={deleteGodsHandler} />
-                    <EditableSpan oldTitle={el.title} callback={updateGoodTitleHandler}/>
+                    <SuperButton title={'x'} callBack={()=>{deleteGoodsHandler(el.id)}} />
+                    <EditableSpan oldTitle={el.title} callback={(newTitle)=>{updateGoodTitleHandler(el.id, newTitle)}}/>
                 </div>
                 <span>in cart: </span>
-                <SuperCheckBox checked={el.inCart} onChange={changeGoodsStatusOnChangeHandler} />
+                <SuperCheckBox checked={el.inCart} callBack={(e)=>{changeGoodsStatusOnChangeHandler(el.id, e)}} />
             </li>
         )
     })
@@ -113,7 +128,7 @@ export const ShopList:React.FC<PropsType> = (props) => {
             </div>
         </StShopList>
     );
-};
+});
 
 const StShopList = styled.div`
   background: black;
