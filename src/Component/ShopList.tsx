@@ -1,5 +1,5 @@
 import React, {ChangeEvent, DragEvent, memo} from 'react';
-import styled from "styled-components";
+import styled, {keyframes} from "styled-components";
 import {
     addGoodsAC, changeGoodsStatusAC, deleteGoodsAC,
     deleteShopListAC,
@@ -31,7 +31,6 @@ export const ShopList:React.FC<PropsType> = memo((props) => {
     const {shoplistId,title, thisList, currentList,goods,filter, setCurrentList,changeFilterValue,} = props
     const dispatch = useDispatch()
     const [listRef] = useAutoAnimate<HTMLUListElement>()
-    //Drop function
     let filteredGoods: Array<GoodType> = []
     if (filter === 'All') {
         filteredGoods = goods
@@ -42,6 +41,7 @@ export const ShopList:React.FC<PropsType> = memo((props) => {
     if (filter === 'Bought') {
         filteredGoods = goods.filter(el => el.inCart === true)
     }
+    //Drop function
     function dragStartHandler(e:DragEvent<HTMLDivElement>) {
         setCurrentList(thisList)
     }
@@ -112,7 +112,7 @@ export const ShopList:React.FC<PropsType> = memo((props) => {
             <ul ref={listRef}>
                 {mappedGoods}
             </ul>
-            <div>
+            <div className={'btnPanel'}>
                 <button className={filter === "All" ? "activeButton" : ""}
                         onClick={() => changeFilterValue(shoplistId, "All")}
                         disabled={filter === "All"}>All
@@ -130,8 +130,36 @@ export const ShopList:React.FC<PropsType> = memo((props) => {
     );
 });
 
+const AnimBtn = keyframes`
+  0%{color: red}
+  50%{color: burlywood}
+  100%{color: green}
+`
+
 const StShopList = styled.div`
-  background: black;
+  background: ${({theme}) => theme.background};
   color: white;
   cursor: grab;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px ${({theme}) => theme.boxShadow};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  ul{
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+    li{
+      display: flex;
+      gap: 5px;
+    }
+  }
+  .btnPanel{
+    button{
+      height: 30px;
+      width: 80px;
+      animation: ${AnimBtn} 2s linear 0s infinite;
+    }
+  }
 `
