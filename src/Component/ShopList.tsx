@@ -104,10 +104,23 @@ export const ShopList:React.FC<PropsType> = memo((props) => {
         >
             <h3>
                 <EditableSpan oldTitle={title} callback={updateShoplistTitleHandler}/>
-                <button onClick={deleteTodoListHandler}>X</button>
+                <SuperButton
+                    callBack={deleteTodoListHandler}
+                    title={'X'}
+                    position={'absolute'}
+                    top={'0'}
+                    left={'80%'}
+                    width={'40px'}
+                    borderRadius={'0 0 5px 5px'}
+                />
             </h3>
             <div>
-                <AddItemForm callback={addGoodHandler}/>
+                <AddItemForm
+                    callback={addGoodHandler}
+                    borderRadius={'0 5px 5px 0px'}
+                    height={'48px'}
+                    pxBoxShadow={'inset -2px 0 5px'}
+                />
             </div>
             <ul ref={listRef}>
                 {mappedGoods}
@@ -130,36 +143,43 @@ export const ShopList:React.FC<PropsType> = memo((props) => {
     );
 });
 
-const AnimBtn = keyframes`
-  0%{color: red}
-  50%{color: burlywood}
-  100%{color: green}
-`
-
 const StShopList = styled.div`
+  position: relative;
   background: ${({theme}) => theme.background};
-  color: white;
+  color: ${({theme}) => theme.color};
   cursor: grab;
-  padding: 10px;
+  padding: 10px 10px 40px 10px;
   border-radius: 10px;
   box-shadow: 0 4px 10px ${({theme}) => theme.boxShadow};
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 200px;
   ul{
     list-style-type: none;
-    padding: 0;
     width: 100%;
+    box-shadow: inset 0 0 5px black;
+    padding: 5px;
+    border-radius: 5px;
     li{
       display: flex;
       gap: 5px;
+      height: 30px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px ${({theme}) => theme.boxShadow};
+      cursor: pointer;
     }
   }
   .btnPanel{
+    position: absolute;
+    bottom: 10px;
     button{
       height: 30px;
       width: 80px;
-      animation: ${AnimBtn} 2s linear 0s infinite;
+      cursor: pointer;
+      background: ${({theme}) => theme.bgItemForm};
+      color: ${({theme}) => theme.colorItemForm};
     }
   }
 `

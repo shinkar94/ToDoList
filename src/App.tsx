@@ -9,6 +9,7 @@ import {Header} from "./Component/Header/Header";
 import {useDispatch} from "react-redux";
 import {useAutoAnimate} from "@formkit/auto-animate/react";
 import {initialStateType} from "./reducer/ThemeReducer";
+import {dayTheme, ThemeType} from "./common/ThemeStyle";
 
 const GlobalStyle = createGlobalStyle`
   body{
@@ -21,13 +22,7 @@ const GlobalStyle = createGlobalStyle`
 function App() {
   const shopList = useAppSelector(ShopListSelectors)
   // const theme = useAppSelector(state => state.theme)
-  const [theme, setTheme] = useState<initialStateType>({
-    theme: {
-      background: 'skyblue',
-      color: 'white',
-      boxShadow: 'black'
-    }
-  })
+  const [theme, setTheme] = useState<ThemeType>(dayTheme)
 
   const dispatch = useDispatch()
   const [divAnimateRef] = useAutoAnimate<HTMLDivElement>()
@@ -88,4 +83,5 @@ const ContentWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
+  padding: 0 20px;
 `
