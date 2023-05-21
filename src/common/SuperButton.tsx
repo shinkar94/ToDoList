@@ -13,6 +13,7 @@ type PropsType = {
 }
 export const SuperButton:React.FC<PropsType> = (props) => {
     const {title, callBack, ...style} = props
+
     const onClickBtn = ()=>{
         callBack()
     }

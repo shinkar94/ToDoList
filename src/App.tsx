@@ -2,7 +2,7 @@ import React, {useCallback, useState} from 'react';
 import './App.css';
 import styled, {createGlobalStyle, ThemeProvider} from "styled-components";
 import {ShopList} from "./Component/ShopList";
-import {AddShopListAC, changeFilterValueAC, FilterValue,NewShopListType} from "./reducer/shopListReducer";
+import {AddShopListAC, NewShopListType} from "./reducer/shopListReducer";
 import {useAppSelector} from "./hooks/hooks";
 import {ShopListSelectors} from "./reducer/selectors";
 import {Header} from "./Component/Header/Header";
@@ -20,7 +20,6 @@ const GlobalStyle = createGlobalStyle`
 
 function App() {
   const shopList = useAppSelector(ShopListSelectors)
-  // const theme = useAppSelector(state => state.theme)
   const [theme, setTheme] = useState<ThemeType>(dayTheme)
 
   const dispatch = useDispatch()
@@ -28,9 +27,6 @@ function App() {
 
   const [currentList, setCurrentList] = useState<NewShopListType | null>(null)
 
-  const changeFilterValue = useCallback((shoplistId: string, filter: FilterValue) => {
-    dispatch(changeFilterValueAC(shoplistId, filter))
-  },[dispatch])
   const addShopList = useCallback((shoplistTitle: string) => {
     dispatch(AddShopListAC(shoplistTitle))
   },[dispatch])
@@ -60,7 +56,6 @@ function App() {
                       goods={list.goods}
                       filter={list.filter}
                       setCurrentList={setCurrentList}
-                      changeFilterValue={changeFilterValue}
                   />
                 )})
             }

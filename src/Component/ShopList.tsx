@@ -1,19 +1,21 @@
 import React, {DragEvent, memo} from 'react';
 import styled from "styled-components";
 import {
-    addGoodsAC, changeGoodsStatusAC, deleteGoodsAC,
+    addGoodsAC,
     deleteShopListAC,
     FilterValue,
     GoodType,
-    NewShopListType, updateGoodTitleAC,
-    updateShoplistOrder, updateShoplistTitleAC
+    NewShopListType,
+    updateShoplistOrder,
+    updateShoplistTitleAC
 } from "../reducer/shopListReducer";
 import {useDispatch} from "react-redux";
 import {EditableSpan} from "../common/EditableSpan";
 import {AddItemForm} from "../common/AddItemForm";
 import {SuperButton} from "../common/SuperButton";
-import {SuperCheckBox} from "../common/SuperCheckBox";
 import {useAutoAnimate} from "@formkit/auto-animate/react";
+import {MappedGoods} from "./mappedGoods";
+import {BtnPanel} from "./BtnPanel";
 
 type PropsType ={
     title: string
@@ -23,23 +25,17 @@ type PropsType ={
     setCurrentList: (currentList: NewShopListType | null)=>void
     goods: GoodType[]
     filter: FilterValue
-    changeFilterValue:(shoplistId: string, filter: FilterValue)=>void
-
 }
 
 export const ShopList:React.FC<PropsType> = memo((props) => {
-    const {shoplistId,title, thisList, currentList,goods,filter, setCurrentList,changeFilterValue,} = props
+    const {shoplistId,title, thisList, currentList,goods,filter, setCurrentList} = props
     const dispatch = useDispatch()
     const [listRef] = useAutoAnimate<HTMLUListElement>()
-    let filteredGoods: Array<GoodType> = []
-    if (filter === 'All') {
-        filteredGoods = goods
-    }
-    if (filter === 'Not to buy') {
-        filteredGoods =goods.filter(el => el.inCart !== true)
-    }
-    if (filter === 'Bought') {
-        filteredGoods = goods.filter(el => el.inCart === true)
+
+    const filteredGoods = ()=>{
+        return filter === 'Not to buy'
+            ? goods.filter(el => el.inCart !== true)
+            : filter === 'Bought' ? goods.filter(el => el.inCart === true) : goods
     }
     //Drop function
     function dragStartHandler(e:DragEvent<HTMLDivElement>) {
@@ -69,30 +65,6 @@ export const ShopList:React.FC<PropsType> = memo((props) => {
     const addGoodHandler = (newTitle: string) => {
         dispatch(addGoodsAC(shoplistId, newTitle))
     }
-    const deleteGoodsHandler = (id:string) =>{
-        dispatch(deleteGoodsAC(shoplistId, id))
-    }
-    const updateGoodTitleHandler = (id:string ,newTitle:string) => {
-        dispatch(updateGoodTitleAC(shoplistId, id, newTitle))
-    }
-    const changeGoodsStatusOnChangeHandler = (id:string, e: boolean)=>{
-        dispatch(changeGoodsStatusAC(shoplistId, id, e))
-    }
-
-    //map
-    const mappedGoods = filteredGoods.map((el) => {
-
-        return (
-            <li key={el.id} className={el.inCart ? 'inCart' : ''}>
-                <div>
-                    <SuperButton title={'x'} callBack={()=>{deleteGoodsHandler(el.id)}} />
-                    <EditableSpan oldTitle={el.title} callback={(newTitle)=>{updateGoodTitleHandler(el.id, newTitle)}}/>
-                </div>
-                <span>in cart: </span>
-                <SuperCheckBox checked={el.inCart} callBack={(e)=>{changeGoodsStatusOnChangeHandler(el.id, e)}} />
-            </li>
-        )
-    })
 
     return (
         <StShopList
@@ -123,22 +95,9 @@ export const ShopList:React.FC<PropsType> = memo((props) => {
                 />
             </div>
             <ul ref={listRef}>
-                {mappedGoods}
+                <MappedGoods filteredGoods={filteredGoods} shoplistId={shoplistId}/>
             </ul>
-            <div className={'btnPanel'}>
-                <button className={filter === "All" ? "activeButton" : ""}
-                        onClick={() => changeFilterValue(shoplistId, "All")}
-                        disabled={filter === "All"}>All
-                </button>
-                <button className={filter === "Not to buy" ? "activeButton" : ""}
-                        onClick={() => changeFilterValue(shoplistId, "Not to buy")}
-                        disabled={filter === "Not to buy"}>Not to buy
-                </button>
-                <button className={filter === "Bought" ? "activeButton" : ""}
-                        onClick={() => changeFilterValue(shoplistId, "Bought")}
-                        disabled={filter === "Bought"}>Bought
-                </button>
-            </div>
+            <BtnPanel shoplistId={shoplistId} filter={filter}/>
         </StShopList>
     );
 });
@@ -161,25 +120,5 @@ const StShopList = styled.div`
     box-shadow: inset 0 0 5px black;
     padding: 5px;
     border-radius: 5px;
-    li{
-      display: flex;
-      gap: 5px;
-      height: 30px;
-      margin-bottom: 10px;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px ${({theme}) => theme.boxShadow};
-      cursor: pointer;
-    }
-  }
-  .btnPanel{
-    position: absolute;
-    bottom: 10px;
-    button{
-      height: 30px;
-      width: 80px;
-      cursor: pointer;
-      background: ${({theme}) => theme.bgItemForm};
-      color: ${({theme}) => theme.colorItemForm};
-    }
   }
 `
