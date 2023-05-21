@@ -1,4 +1,4 @@
-import React, {ChangeEvent} from 'react';
+import React, {ChangeEvent, memo} from 'react';
 import styled from "styled-components";
 import {AddItemForm} from "../../common/AddItemForm";
 import {dayTheme, nightTheme, ThemeType} from "../../common/ThemeStyle";
@@ -8,7 +8,7 @@ type HeaderProps = {
     setTheme: (theme: ThemeType)=>void
 }
 
-export const Header:React.FC<HeaderProps> = (props) => {
+export const Header:React.FC<HeaderProps> = memo((props) => {
     const {addShopList, setTheme} =props
     const onChangeHandler = (e:ChangeEvent<HTMLInputElement>)=>{
         let status = e.currentTarget.checked
@@ -33,7 +33,7 @@ export const Header:React.FC<HeaderProps> = (props) => {
             </StLabel>
         </StHeader>
     );
-};
+});
 
 const StHeader = styled.div`
   display: flex;

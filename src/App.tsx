@@ -2,13 +2,12 @@ import React, {useCallback, useState} from 'react';
 import './App.css';
 import styled, {createGlobalStyle, ThemeProvider} from "styled-components";
 import {ShopList} from "./Component/ShopList";
-import {AddShopListAC, changeFilterValueAC, FilterValue, GoodType, NewShopListType} from "./reducer/shopListReducer";
+import {AddShopListAC, changeFilterValueAC, FilterValue,NewShopListType} from "./reducer/shopListReducer";
 import {useAppSelector} from "./hooks/hooks";
 import {ShopListSelectors} from "./reducer/selectors";
 import {Header} from "./Component/Header/Header";
 import {useDispatch} from "react-redux";
 import {useAutoAnimate} from "@formkit/auto-animate/react";
-import {initialStateType} from "./reducer/ThemeReducer";
 import {dayTheme, ThemeType} from "./common/ThemeStyle";
 
 const GlobalStyle = createGlobalStyle`

@@ -1,5 +1,5 @@
-import React, {ChangeEvent, DragEvent, memo} from 'react';
-import styled, {keyframes} from "styled-components";
+import React, {DragEvent, memo} from 'react';
+import styled from "styled-components";
 import {
     addGoodsAC, changeGoodsStatusAC, deleteGoodsAC,
     deleteShopListAC,
