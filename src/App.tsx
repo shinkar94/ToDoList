@@ -22,7 +22,7 @@ function App() {
   useEffect(()=>{
     dispatch(todoThunks.getTodo(""))
   }, [])
-  const todoList = useAppSelector(ShopListSelectors)
+  let todoList = useAppSelector(ShopListSelectors)
   // console.log(todoList)
   const [theme, setTheme] = useState<ThemeType>(dayTheme)
 
@@ -33,13 +33,14 @@ function App() {
   const addTodo = useCallback((TodolistTitle: string) => {
       dispatch(todoThunks.addTodo(TodolistTitle))
   },[dispatch])
-  // const sortList = (a: TodoType, b: TodoType)=> {
-  //   if (a.order > b.order) {
-  //     return 1
-  //   } else {
-  //     return -1
-  //   }
-  // }
+  const sortList = (a: TodoType, b: TodoType)=> {
+    if (a.order > b.order) {
+      return 1
+    } else {
+      return -1
+    }
+  }
+  const sortedList = [...todoList].sort(sortList)
 
   return (
       <ThemeProvider theme={theme.theme}>
@@ -48,8 +49,7 @@ function App() {
           <Header addTodo={addTodo} setTheme={setTheme}/>
           <ContentWrapper ref={divAnimateRef}>
             {
-              // todoList.sort(sortList).map(list =>{
-              todoList.map(list =>{
+                sortedList.map(list =>{
                   return(
                       <TodoList key={list.id}
                                 title={list.title}

@@ -1,5 +1,5 @@
 import {API, TaskTypeAPI, TodolistType} from "../API/API";
-import {createSlice} from "@reduxjs/toolkit";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {createAppAsyncThunk} from "../common/utils/create-app-async-thunk";
 import {thunkTryCatch} from "../common/utils/thunkTryCatch";
 export type FilterValue = "All" | "Not to buy" | "Bought"
@@ -23,7 +23,7 @@ const THUNK_PREFIXES = {
     ADD_TODO: 'todos/addTodo',
     DELETE_TODO: 'todos/deleteTodo',
     UPDATE_TODO_TITLE: 'todos/updateTodoTitle',
-    UPDATE_TASK_TITLE: 'todos/updateTaskTitle'
+    UPDATE_TASK_TITLE: 'todos/updateTaskTitle',
 }
 const getTodo = createAppAsyncThunk(
     THUNK_PREFIXES.GET_TODO, (arg:any, thunkAPI) => thunkTryCatch(thunkAPI, async ()=>{
@@ -67,10 +67,30 @@ const updateTaskTitle = createAppAsyncThunk(
 )
 
 
+
 const slice = createSlice({
     name: 'todos',
     initialState: initialState,
-    reducers:{},
+    reducers:{
+        changeFilter:(state:TodoType[], action:PayloadAction<{ToDoId:string, filter:FilterValue}>)=>{
+            return state.map((el) => el.id === action.payload.ToDoId ? {...el, filter: action.payload.filter} : el)
+        },
+        changeStatus: (state:TodoType[], action:PayloadAction<{ToDoId:string, id:string, e:boolean}>) =>{
+            return state.map((el) => el.id === action.payload.ToDoId ?
+                {...el, tasks: el.tasks.map(task => task.id === action.payload.id? {...task, isDone: action.payload.e} : task)} : el)
+        },
+        updateToDoOrder: (state:TodoType[], action:PayloadAction<{thisList:TodoType, currentList:TodoType | null}>)=>{
+            return state.map(list => {
+                        if(list.id === action.payload.thisList.id){
+                            return {...list, order: action.payload.currentList?.order ?? 0}
+                        }
+                        if(list.id === action.payload.currentList?.id){
+                            return {...list, order: action.payload.thisList.order ?? 0}
+                        }
+                        return list
+            })
+        }
+    },
     extraReducers: builder => {
         builder.addCase(getTodo.fulfilled, (state, action)=>{
             return action.payload.data.map(todo => ({...todo, filter: "All", tasks: [], order: Math.abs(todo.order)}))
@@ -110,71 +130,4 @@ const slice = createSlice({
 export const todoReducer = slice.reducer;
 export const todoThunks = { getTodo,getTasks,addTasks, deleteTasks, addTodo, deleteTodo, updateTodoTitle, updateTaskTitle};
 export const todoAction = slice.actions;
-
-// export const todoListReducer = (state:TodoType[] = initialState, action: ActionType):TodoType[]=>{
-//     switch (action.type) {
-//
-//         case 'CHANGE-FILTER':{
-//             return state.map((el) => el.id === action.payload.ToDoId ? {...el, filter: action.payload.filter} : el)
-//         }
-//         case 'CHANGE-STATUS':{
-//             return state.map((el) => el.id === action.payload.ToDoId ?
-//                 {...el, tasks: el.tasks.map(task => task.id === action.payload.TasksId ? {...task, isDone: action.payload.inChecked} : task)} : el)
-//         }
-//
-//
-//         case 'SORT-TODO':{
-//             return state.map(list => {
-//                         if(list.id === action.payload.dropList.id){
-//                             return {...list, order: action.payload.currentList?.order ?? 0}
-//                         }
-//                         if(list.id === action.payload.currentList?.id){
-//                             return {...list, order: action.payload.dropList.order ?? 0}
-//                         }
-//                         return list
-//             })
-//         }
-//         default: return state
-//     }
-// }
-//
-
-// export const changeFilterValueAC = (ToDoId: string, filter: FilterValue)=>{
-//     return{
-//         type: 'CHANGE-FILTER',
-//         payload:{
-//             ToDoId,
-//             filter
-//         }
-//     } as const
-// }
-// export const changeTaskStatusAC = (ToDoId: string, TasksId: string, inChecked: boolean)=>{
-//     return{
-//         type: 'CHANGE-STATUS',
-//         payload:{
-//             ToDoId,
-//             TasksId,
-//             inChecked
-//         }
-//     } as const
-// }
-// export const updateToDoOrderAC = (dropList: TodoType, currentList: TodoType | null)=>{
-//     return{
-//         type: 'SORT-TODO',
-//         payload:{
-//             dropList,
-//             currentList
-//         }
-//     } as const
-// }
-
-// export const changeFilterTC = (ToDoId: string, filter: FilterValue) => (dispatch: AppDispatch) =>{
-//     dispatch(changeFilterValueAC(ToDoId, filter))
-// }
-// export const changeTaskStatusTC = (ToDoID: string, taskID: string, check:boolean) => (dispatch: AppDispatch) =>{
-//     dispatch(changeTaskStatusAC(ToDoID,taskID,check))
-// }
-// export const updateToDoOrderTC = (dropList: TodoType, currentList: TodoType | null)=> (dispatch: AppDispatch)=>{
-//     dispatch(updateToDoOrderAC(dropList, currentList))
-// }
 

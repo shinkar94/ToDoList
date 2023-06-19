@@ -1,5 +1,5 @@
 import React from 'react';
-import {FilterValue} from "../reducer/TodoListReducer";
+import {FilterValue, todoAction} from "../reducer/TodoListReducer";
 import styled from "styled-components";
 import {useAppDispatch} from "../hooks/hooks";
 
@@ -11,8 +11,8 @@ type PropsType = {
 export const BtnPanel:React.FC<PropsType> = (props) => {
     const {ToDoId, filter} = props
     const dispatch = useAppDispatch()
-    const changeFilterValue = (shoplistId: string, filter: FilterValue) => {
-        // dispatch(changeFilterTC(shoplistId, filter))
+    const changeFilterValue = (ToDoId: string, filter: FilterValue) => {
+        dispatch(todoAction.changeFilter({ToDoId, filter}))
     }
     return (
         <StBtnPanel>

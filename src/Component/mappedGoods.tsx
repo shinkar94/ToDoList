@@ -4,7 +4,7 @@ import {EditableSpan} from "../common/EditableSpan";
 import {SuperCheckBox} from "../common/SuperCheckBox";
 import styled from "styled-components";
 import {useAppDispatch} from "../hooks/hooks";
-import {StateTasksType, todoThunks} from "../reducer/TodoListReducer";
+import {StateTasksType, todoAction, todoThunks} from "../reducer/TodoListReducer";
 
 type PropsType = {
     ToDoId: string
@@ -20,15 +20,15 @@ export const MappedGoods:React.FC<PropsType> = (props) => {
     const updateTaskTitleHandler = (id:string ,newTitle:string) => {
         dispatch(todoThunks.updateTaskTitle({ToDoId, id, newTitle}))
     }
-    const changeGoodsStatusOnChangeHandler = (id:string, e: boolean)=>{
-        // dispatch(changeTaskStatusTC(ToDoId, id, e))
+    const changeTaskStatusOnChangeHandler = (id:string, e: boolean)=>{
+        dispatch(todoAction.changeStatus({ToDoId, id, e}))
     }
     //map
     const mappedGoods = filteredTasks().map((el:StateTasksType) => {
 
         return (
             <StLi key={el.id} className={el.isDone ? 'inCart' : ''}>
-                <SuperCheckBox checked={el.isDone} callBack={(e)=>{changeGoodsStatusOnChangeHandler(el.id, e)}} />
+                <SuperCheckBox checked={el.isDone} callBack={(e)=>{changeTaskStatusOnChangeHandler(el.id, e)}} />
                 <div>
                     <EditableSpan oldTitle={el.title} callback={(newTitle)=>{updateTaskTitleHandler(el.id, newTitle)}}/>
                     <SuperButton title={'x'}

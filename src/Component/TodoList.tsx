@@ -8,7 +8,7 @@ import {useAutoAnimate} from "@formkit/auto-animate/react";
 import {MappedGoods} from "./mappedGoods";
 import {BtnPanel} from "./BtnPanel";
 import {useAppDispatch} from "../hooks/hooks";
-import {FilterValue, StateTasksType, todoThunks, TodoType} from "../reducer/TodoListReducer";
+import {FilterValue, StateTasksType, todoAction, todoThunks, TodoType} from "../reducer/TodoListReducer";
 
 type PropsType ={
     title: string
@@ -47,7 +47,7 @@ export const TodoList:React.FC<PropsType> = memo((props) => {
     }
     function dropHandler(e:DragEvent<HTMLDivElement>) {
         e.preventDefault()
-        // dispatch(updateToDoOrderTC( thisList, currentList))
+        dispatch(todoAction.updateToDoOrder({thisList, currentList}))
     }
 
     //HandlerFunction
