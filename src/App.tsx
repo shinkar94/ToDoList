@@ -2,12 +2,13 @@ import React, {useCallback, useEffect, useState} from 'react';
 import './App.css';
 import styled, {createGlobalStyle, ThemeProvider} from "styled-components";
 import {TodoList} from "./Component/TodoList";
-import {addTodoTC, getTodoListTC, TodoType} from "./reducer/TodoListReducer";
+import {todoThunks, TodoType} from "./reducer/TodoListReducer";
 import {useAppDispatch, useAppSelector} from "./hooks/hooks";
 import {ShopListSelectors} from "./reducer/selectors";
 import {Header} from "./Component/Header/Header";
 import {useAutoAnimate} from "@formkit/auto-animate/react";
 import {dayTheme, ThemeType} from "./common/ThemeStyle";
+import {ToastContainer} from "react-toastify";
 
 const GlobalStyle = createGlobalStyle`
   body{
@@ -16,39 +17,39 @@ const GlobalStyle = createGlobalStyle`
   }
 `
 
-
 function App() {
   const dispatch = useAppDispatch()
   useEffect(()=>{
-    dispatch(getTodoListTC())
+    dispatch(todoThunks.getTodo(""))
   }, [])
   const todoList = useAppSelector(ShopListSelectors)
-  console.log(todoList)
+  // console.log(todoList)
   const [theme, setTheme] = useState<ThemeType>(dayTheme)
 
   const [divAnimateRef] = useAutoAnimate<HTMLDivElement>()
 
   const [currentList, setCurrentList] = useState<TodoType | null>(null)
 
-  const addShopList = useCallback((shoplistTitle: string) => {
-    dispatch(addTodoTC(shoplistTitle))
+  const addTodo = useCallback((TodolistTitle: string) => {
+      dispatch(todoThunks.addTodo(TodolistTitle))
   },[dispatch])
-  const sortList = (a: TodoType, b: TodoType)=> {
-    if (a.order > b.order) {
-      return 1
-    } else {
-      return -1
-    }
-  }
+  // const sortList = (a: TodoType, b: TodoType)=> {
+  //   if (a.order > b.order) {
+  //     return 1
+  //   } else {
+  //     return -1
+  //   }
+  // }
 
   return (
       <ThemeProvider theme={theme.theme}>
         <ContainerApp >
           <GlobalStyle />
-          <Header addShopList={addShopList} setTheme={setTheme}/>
+          <Header addTodo={addTodo} setTheme={setTheme}/>
           <ContentWrapper ref={divAnimateRef}>
             {
-              todoList.sort(sortList).map(list =>{
+              // todoList.sort(sortList).map(list =>{
+              todoList.map(list =>{
                   return(
                       <TodoList key={list.id}
                                 title={list.title}
@@ -64,6 +65,15 @@ function App() {
             }
           </ContentWrapper>
         </ContainerApp>
+        <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            closeOnClick
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+        />
       </ThemeProvider>
   );
 }

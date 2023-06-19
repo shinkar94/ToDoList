@@ -2,14 +2,9 @@ import React from 'react';
 import {SuperButton} from "../common/SuperButton";
 import {EditableSpan} from "../common/EditableSpan";
 import {SuperCheckBox} from "../common/SuperCheckBox";
-import {
-    changeTaskStatusTC,
-    deleteTaskTC,
-    StateTasksType,
-    updateTitleTaskTC
-} from "../reducer/TodoListReducer";
 import styled from "styled-components";
 import {useAppDispatch} from "../hooks/hooks";
+import {StateTasksType, todoThunks} from "../reducer/TodoListReducer";
 
 type PropsType = {
     ToDoId: string
@@ -19,14 +14,14 @@ type PropsType = {
 export const MappedGoods:React.FC<PropsType> = (props) => {
     const {ToDoId, filteredTasks} = props
     const dispatch = useAppDispatch()
-    const deleteGoodsHandler = (id:string) =>{
-        dispatch(deleteTaskTC(ToDoId, id))
+    const deleteTaskHandler = (id:string) =>{
+        dispatch(todoThunks.deleteTasks({ToDoId, id}))
     }
-    const updateGoodTitleHandler = (id:string ,newTitle:string) => {
-        dispatch(updateTitleTaskTC(ToDoId, id, newTitle))
+    const updateTaskTitleHandler = (id:string ,newTitle:string) => {
+        dispatch(todoThunks.updateTaskTitle({ToDoId, id, newTitle}))
     }
     const changeGoodsStatusOnChangeHandler = (id:string, e: boolean)=>{
-        dispatch(changeTaskStatusTC(ToDoId, id, e))
+        // dispatch(changeTaskStatusTC(ToDoId, id, e))
     }
     //map
     const mappedGoods = filteredTasks().map((el:StateTasksType) => {
@@ -35,9 +30,9 @@ export const MappedGoods:React.FC<PropsType> = (props) => {
             <StLi key={el.id} className={el.isDone ? 'inCart' : ''}>
                 <SuperCheckBox checked={el.isDone} callBack={(e)=>{changeGoodsStatusOnChangeHandler(el.id, e)}} />
                 <div>
-                    <EditableSpan oldTitle={el.title} callback={(newTitle)=>{updateGoodTitleHandler(el.id, newTitle)}}/>
+                    <EditableSpan oldTitle={el.title} callback={(newTitle)=>{updateTaskTitleHandler(el.id, newTitle)}}/>
                     <SuperButton title={'x'}
-                                 callBack={()=>{deleteGoodsHandler(el.id)}}
+                                 callBack={()=>{deleteTaskHandler(el.id)}}
                                  position={'absolute'}
                                  right={'0'}
                                  top={'0'}

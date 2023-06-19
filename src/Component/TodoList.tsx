@@ -1,12 +1,6 @@
-import React, {DragEvent, memo} from 'react';
+import React, {DragEvent, memo, useEffect} from 'react';
 import styled from "styled-components";
-import {
-    addTaskTC,
-    deleteTodoTC,
-    FilterValue, StateTasksType,
-    TodoType,
-    updateTitleTC, updateToDoOrderTC
-} from "../reducer/TodoListReducer";
+
 import {EditableSpan} from "../common/EditableSpan";
 import {AddItemForm} from "../common/AddItemForm";
 import {SuperButton} from "../common/SuperButton";
@@ -14,6 +8,7 @@ import {useAutoAnimate} from "@formkit/auto-animate/react";
 import {MappedGoods} from "./mappedGoods";
 import {BtnPanel} from "./BtnPanel";
 import {useAppDispatch} from "../hooks/hooks";
+import {FilterValue, StateTasksType, todoThunks, TodoType} from "../reducer/TodoListReducer";
 
 type PropsType ={
     title: string
@@ -28,6 +23,9 @@ type PropsType ={
 export const TodoList:React.FC<PropsType> = memo((props) => {
     const {ToDoId,title, thisList, currentList,tasks,filter, setCurrentList} = props
     const dispatch = useAppDispatch()
+    useEffect(()=>{
+        dispatch(todoThunks.getTasks(ToDoId))
+    }, [])
     const [listRef] = useAutoAnimate<HTMLUListElement>()
     const filteredTasks = ()=>{
         return filter === 'Not to buy'
@@ -49,18 +47,18 @@ export const TodoList:React.FC<PropsType> = memo((props) => {
     }
     function dropHandler(e:DragEvent<HTMLDivElement>) {
         e.preventDefault()
-        dispatch(updateToDoOrderTC( thisList, currentList))
+        // dispatch(updateToDoOrderTC( thisList, currentList))
     }
 
     //HandlerFunction
     const deleteTodoListHandler = () => {
-        dispatch(deleteTodoTC(ToDoId))
+        dispatch(todoThunks.deleteTodo(ToDoId))
     }
-    const updateShoplistTitleHandler = (newTitle: string) => {
-        dispatch(updateTitleTC(ToDoId, newTitle))
+    const updateTodolistTitleHandler = (newTitle: string) => {
+        dispatch(todoThunks.updateTodoTitle({ToDoId, newTitle}))
     }
-    const addGoodHandler = (newTitle: string) => {
-        dispatch(addTaskTC(ToDoId, newTitle))
+    const addTasksHandler = (newTitle: string) => {
+        dispatch(todoThunks.addTasks({ToDoId, newTitle}))
     }
 
     return (
@@ -72,7 +70,7 @@ export const TodoList:React.FC<PropsType> = memo((props) => {
             onDrop={dropHandler}
         >
             <h3>
-                <EditableSpan oldTitle={title} callback={updateShoplistTitleHandler}/>
+                <EditableSpan oldTitle={title} callback={updateTodolistTitleHandler}/>
                 <SuperButton
                     callBack={deleteTodoListHandler}
                     title={'X'}
@@ -85,7 +83,7 @@ export const TodoList:React.FC<PropsType> = memo((props) => {
             </h3>
             <div>
                 <AddItemForm
-                    callback={addGoodHandler}
+                    callback={addTasksHandler}
                     borderradius={'0 5px 5px 0px'}
                     height={'48px'}
                     pxboxshadow={'inset -2px 0 5px'}

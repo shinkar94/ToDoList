@@ -4,12 +4,12 @@ import {AddItemForm} from "../../common/AddItemForm";
 import {dayTheme, nightTheme, ThemeType} from "../../common/ThemeStyle";
 
 type HeaderProps = {
-    addShopList: (shoplistTitle: string)=>void
+    addTodo: (TodoListTitle: string)=>void
     setTheme: (theme: ThemeType)=>void
 }
 
 export const Header:React.FC<HeaderProps> = memo((props) => {
-    const {addShopList, setTheme} =props
+    const {addTodo, setTheme} =props
     const onChangeHandler = (e:ChangeEvent<HTMLInputElement>)=>{
         let status = e.currentTarget.checked
         status ? setTheme(nightTheme) : setTheme(dayTheme)
@@ -19,7 +19,7 @@ export const Header:React.FC<HeaderProps> = memo((props) => {
         <StHeader>
             <div>
                 <AddItemForm
-                    callback={addShopList}
+                    callback={addTodo}
                     borderradius={'0 5px 5px 0px'}
                     height={'48px'}
                     pxboxshadow={'inset -2px 0 5px'}
