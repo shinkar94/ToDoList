@@ -8,12 +8,16 @@ export const Preloader = () => {
 };
 
 const StSpan = styled.span`
-  width: 48px;
-  height: 48px;
-  border: 3px solid #FFF;
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  //transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
+  border: 3px solid #c01010;
   border-radius: 50%;
   display: inline-block;
-  position: relative;
+  //position: relative;
   box-sizing: border-box;
   animation: rotation 1s linear infinite;
 
@@ -24,10 +28,10 @@ const StSpan = styled.span`
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: 56px;
-    height: 56px;
+    width: 106px;
+    height: 106px;
     border-radius: 50%;
-    border: 3px solid;
+    border: 5px solid;
     border-color: #FF3D00 transparent;
   }
 

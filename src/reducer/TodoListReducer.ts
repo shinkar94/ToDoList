@@ -26,7 +26,7 @@ const THUNK_PREFIXES = {
     UPDATE_TASK_TITLE: 'todos/updateTaskTitle',
 }
 const getTodo = createAppAsyncThunk(
-    THUNK_PREFIXES.GET_TODO, (arg:any, thunkAPI) => thunkTryCatch(thunkAPI, async ()=>{
+    THUNK_PREFIXES.GET_TODO, (arg:string, thunkAPI) => thunkTryCatch(thunkAPI, async ()=>{
         return await API.getToDoList()
     })
 )

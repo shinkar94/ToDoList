@@ -2,10 +2,12 @@ import {Action} from "redux";
 import { todoReducer} from "../reducer/TodoListReducer";
 import {ThunkAction} from "redux-thunk";
 import {configureStore} from "@reduxjs/toolkit";
+import {appReducer} from "../reducer/appSlice";
 
 export const store = configureStore({
     reducer: {
         TodoList:todoReducer,
+        app:appReducer
     },
 });
 
