@@ -2,38 +2,49 @@ import React from 'react';
 import {SuperButton} from "../common/SuperButton";
 import {EditableSpan} from "../common/EditableSpan";
 import {SuperCheckBox} from "../common/SuperCheckBox";
-import {Dispatch} from "redux";
-import {useDispatch} from "react-redux";
-import {changeGoodsStatusAC, deleteGoodsAC, GoodType, updateGoodTitleAC} from "../reducer/shopListReducer";
+import {
+    changeTaskStatusTC,
+    deleteTaskTC,
+    StateTasksType,
+    updateTitleTaskTC
+} from "../reducer/TodoListReducer";
 import styled from "styled-components";
+import {useAppDispatch} from "../hooks/hooks";
+
 type PropsType = {
-    shoplistId: string
-    filteredGoods: ()=>GoodType[]
+    ToDoId: string
+    filteredTasks: ()=>StateTasksType[]
 }
 
 export const MappedGoods:React.FC<PropsType> = (props) => {
-    const {shoplistId, filteredGoods} = props
-    const dispatch:Dispatch = useDispatch()
+    const {ToDoId, filteredTasks} = props
+    const dispatch = useAppDispatch()
     const deleteGoodsHandler = (id:string) =>{
-        dispatch(deleteGoodsAC(shoplistId, id))
+        dispatch(deleteTaskTC(ToDoId, id))
     }
     const updateGoodTitleHandler = (id:string ,newTitle:string) => {
-        dispatch(updateGoodTitleAC(shoplistId, id, newTitle))
+        dispatch(updateTitleTaskTC(ToDoId, id, newTitle))
     }
     const changeGoodsStatusOnChangeHandler = (id:string, e: boolean)=>{
-        dispatch(changeGoodsStatusAC(shoplistId, id, e))
+        dispatch(changeTaskStatusTC(ToDoId, id, e))
     }
     //map
-    const mappedGoods = filteredGoods().map((el) => {
+    const mappedGoods = filteredTasks().map((el:StateTasksType) => {
 
         return (
-            <StLi key={el.id} className={el.inCart ? 'inCart' : ''}>
+            <StLi key={el.id} className={el.isDone ? 'inCart' : ''}>
+                <SuperCheckBox checked={el.isDone} callBack={(e)=>{changeGoodsStatusOnChangeHandler(el.id, e)}} />
                 <div>
-                    <SuperButton title={'x'} callBack={()=>{deleteGoodsHandler(el.id)}} />
                     <EditableSpan oldTitle={el.title} callback={(newTitle)=>{updateGoodTitleHandler(el.id, newTitle)}}/>
+                    <SuperButton title={'x'}
+                                 callBack={()=>{deleteGoodsHandler(el.id)}}
+                                 position={'absolute'}
+                                 right={'0'}
+                                 top={'0'}
+                                 width={'30px'}
+                                 borderradius={'0px 5px 5px 0px'}
+                                 height={'100%'}/>
                 </div>
-                <span>in cart: </span>
-                <SuperCheckBox checked={el.inCart} callBack={(e)=>{changeGoodsStatusOnChangeHandler(el.id, e)}} />
             </StLi>
         )
     })
@@ -41,9 +52,11 @@ export const MappedGoods:React.FC<PropsType> = (props) => {
 };
 
 const StLi = styled.li`
+    position: relative;
     display: flex;
+    align-items: center;
     gap: 5px;
-    height: 30px;
+    height: 40px;
     margin-bottom: 10px;
     border-radius: 5px;
     box-shadow: 0 2px 5px ${({theme}) => theme.boxShadow};

@@ -20,9 +20,9 @@ export const Header:React.FC<HeaderProps> = memo((props) => {
             <div>
                 <AddItemForm
                     callback={addShopList}
-                    borderRadius={'0 5px 5px 0px'}
+                    borderradius={'0 5px 5px 0px'}
                     height={'48px'}
-                    pxBoxShadow={'inset -2px 0 5px'}
+                    pxboxshadow={'inset -2px 0 5px'}
                 />
             </div>
             {/*<input onChange={onChangeHandler} type="checkbox"/>*/}

@@ -1,4 +1,4 @@
-import {RootState} from "../store/store";
+import {RootReducerType} from "../store/store";
 
 
-export const ShopListSelectors = (state: RootState) => state.shopList
+export const ShopListSelectors = (state: RootReducerType) => state.TodoList

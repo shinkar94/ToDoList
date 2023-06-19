@@ -4,12 +4,12 @@ import {SuperButton} from "./SuperButton";
 import styled from "styled-components";
 type PropsType = {
     callback: (title: string) => void
-    borderRadius?: string
+    borderradius?: string
     height?:string
-    pxBoxShadow?: string
+    pxboxshadow?: string
 }
 export const AddItemForm:React.FC<PropsType> = (props) => {
-    const {callback, borderRadius, height, pxBoxShadow} = props
+    const {callback, borderradius, height, pxboxshadow} = props
     const [title, setTitle] = useState<string>('')
     const [error, setError] = useState<boolean | string>(false)
     const onChangeInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -45,9 +45,9 @@ export const AddItemForm:React.FC<PropsType> = (props) => {
             <SuperButton
                 title={'Add'}
                 callBack={addGoodsOnClickHandler}
-                borderRadius={borderRadius}
+                borderradius={borderradius}
                 height={height}
-                pxBoxShadow={pxBoxShadow}
+                pxboxshadow={pxboxshadow}
             />
             {error && <div className={'error-message'}>{error}</div>}
             {title.length > 15 && <div>

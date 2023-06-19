@@ -1,31 +1,31 @@
-import React, {useCallback} from 'react';
-import {changeFilterValueAC, FilterValue} from "../reducer/shopListReducer";
-import {useDispatch} from "react-redux";
+import React from 'react';
+import {changeFilterTC, FilterValue} from "../reducer/TodoListReducer";
 import styled from "styled-components";
+import {useAppDispatch} from "../hooks/hooks";
 
 type PropsType = {
-    shoplistId: string
+    ToDoId: string
     filter: FilterValue
 }
 
 export const BtnPanel:React.FC<PropsType> = (props) => {
-    const {shoplistId, filter} = props
-    const dispatch = useDispatch()
+    const {ToDoId, filter} = props
+    const dispatch = useAppDispatch()
     const changeFilterValue = (shoplistId: string, filter: FilterValue) => {
-        dispatch(changeFilterValueAC(shoplistId, filter))
+        dispatch(changeFilterTC(shoplistId, filter))
     }
     return (
         <StBtnPanel>
             <button className={filter === "All" ? "activeButton" : ""}
-                    onClick={() => changeFilterValue(shoplistId, "All")}
+                    onClick={() => changeFilterValue(ToDoId, "All")}
                     disabled={filter === "All"}>All
             </button>
             <button className={filter === "Not to buy" ? "activeButton" : ""}
-                    onClick={() => changeFilterValue(shoplistId, "Not to buy")}
+                    onClick={() => changeFilterValue(ToDoId, "Not to buy")}
                     disabled={filter === "Not to buy"}>Not to buy
             </button>
             <button className={filter === "Bought" ? "activeButton" : ""}
-                    onClick={() => changeFilterValue(shoplistId, "Bought")}
+                    onClick={() => changeFilterValue(ToDoId, "Bought")}
                     disabled={filter === "Bought"}>Bought
             </button>
         </StBtnPanel>

@@ -3,13 +3,14 @@ import styled from "styled-components";
 type PropsType = {
     title: string,
     callBack: () => void
-    borderRadius?:string
+    borderradius?:string
     height?:string
     width?:string
-    pxBoxShadow?:string
+    pxboxshadow?:string
     position?:string
     top?:string
     left?:string
+    right?:string
 }
 export const SuperButton:React.FC<PropsType> = (props) => {
     const {title, callBack, ...style} = props
@@ -23,33 +24,36 @@ export const SuperButton:React.FC<PropsType> = (props) => {
             position={style.position}
             top={style.top}
             left={style.left}
-            borderRadius={style.borderRadius}
+            borderradius={style.borderradius}
             height={style.height}
             width={style.width}
-            pxBoxShadow={style.pxBoxShadow}
+            pxboxshadow={style.pxboxshadow}
+            right={style.right}
         >{title}</StButton>
     );
 };
 
 type StButtonType = {
-    borderRadius?: string
+    borderradius?: string
     height?:string
-    pxBoxShadow?:string
+    pxboxshadow?:string
     width?:string
     position?:string
     top?:string
     left?:string
+    right?:string
 }
 const StButton = styled.button<StButtonType>`
   position: ${({position}) => position};
   top: ${({top}) => top};
   left: ${({left}) => left};
-  border-radius: ${({borderRadius}) => borderRadius};
+  right: ${({right}) => right};
+  border-radius: ${({borderradius}) => borderradius};
   height: ${({height}) => height};
   width: ${({width})=> width};
   border: 0;
   background: ${({theme})=> theme.bgItemForm};
   color: ${({theme}) => theme.colorItemForm};
   cursor: pointer;
-  box-shadow: ${({pxBoxShadow}) => pxBoxShadow} ${({theme}) => theme.shadowItemForm};
+  box-shadow: ${({pxboxshadow}) => pxboxshadow} ${({theme}) => theme.shadowItemForm};
 `

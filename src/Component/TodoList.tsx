@@ -1,41 +1,38 @@
 import React, {DragEvent, memo} from 'react';
 import styled from "styled-components";
 import {
-    addGoodsAC,
-    deleteShopListAC,
-    FilterValue,
-    GoodType,
-    NewShopListType,
-    updateShoplistOrder,
-    updateShoplistTitleAC
-} from "../reducer/shopListReducer";
-import {useDispatch} from "react-redux";
+    addTaskTC,
+    deleteTodoTC,
+    FilterValue, StateTasksType,
+    TodoType,
+    updateTitleTC, updateToDoOrderTC
+} from "../reducer/TodoListReducer";
 import {EditableSpan} from "../common/EditableSpan";
 import {AddItemForm} from "../common/AddItemForm";
 import {SuperButton} from "../common/SuperButton";
 import {useAutoAnimate} from "@formkit/auto-animate/react";
 import {MappedGoods} from "./mappedGoods";
 import {BtnPanel} from "./BtnPanel";
+import {useAppDispatch} from "../hooks/hooks";
 
 type PropsType ={
     title: string
-    shoplistId: string
-    thisList: NewShopListType
-    currentList: NewShopListType | null
-    setCurrentList: (currentList: NewShopListType | null)=>void
-    goods: GoodType[]
+    ToDoId: string
+    thisList: TodoType
+    currentList: TodoType | null
+    setCurrentList: (currentList: TodoType | null)=>void
+    tasks: StateTasksType[]
     filter: FilterValue
 }
 
-export const ShopList:React.FC<PropsType> = memo((props) => {
-    const {shoplistId,title, thisList, currentList,goods,filter, setCurrentList} = props
-    const dispatch = useDispatch()
+export const TodoList:React.FC<PropsType> = memo((props) => {
+    const {ToDoId,title, thisList, currentList,tasks,filter, setCurrentList} = props
+    const dispatch = useAppDispatch()
     const [listRef] = useAutoAnimate<HTMLUListElement>()
-
-    const filteredGoods = ()=>{
+    const filteredTasks = ()=>{
         return filter === 'Not to buy'
-            ? goods.filter(el => el.inCart !== true)
-            : filter === 'Bought' ? goods.filter(el => el.inCart === true) : goods
+            ? tasks.filter(el => el.isDone !== true)
+            : filter === 'Bought' ? tasks.filter(el => el.isDone === true) : tasks
     }
     //Drop function
     function dragStartHandler(e:DragEvent<HTMLDivElement>) {
@@ -52,18 +49,18 @@ export const ShopList:React.FC<PropsType> = memo((props) => {
     }
     function dropHandler(e:DragEvent<HTMLDivElement>) {
         e.preventDefault()
-        dispatch(updateShoplistOrder( thisList, currentList))
+        dispatch(updateToDoOrderTC( thisList, currentList))
     }
 
     //HandlerFunction
     const deleteTodoListHandler = () => {
-        dispatch(deleteShopListAC(shoplistId))
+        dispatch(deleteTodoTC(ToDoId))
     }
     const updateShoplistTitleHandler = (newTitle: string) => {
-        dispatch(updateShoplistTitleAC(shoplistId, newTitle))
+        dispatch(updateTitleTC(ToDoId, newTitle))
     }
     const addGoodHandler = (newTitle: string) => {
-        dispatch(addGoodsAC(shoplistId, newTitle))
+        dispatch(addTaskTC(ToDoId, newTitle))
     }
 
     return (
@@ -83,21 +80,21 @@ export const ShopList:React.FC<PropsType> = memo((props) => {
                     top={'0'}
                     left={'80%'}
                     width={'40px'}
-                    borderRadius={'0 0 5px 5px'}
+                    borderradius={'0 0 5px 5px'}
                 />
             </h3>
             <div>
                 <AddItemForm
                     callback={addGoodHandler}
-                    borderRadius={'0 5px 5px 0px'}
+                    borderradius={'0 5px 5px 0px'}
                     height={'48px'}
-                    pxBoxShadow={'inset -2px 0 5px'}
+                    pxboxshadow={'inset -2px 0 5px'}
                 />
             </div>
             <ul ref={listRef}>
-                <MappedGoods filteredGoods={filteredGoods} shoplistId={shoplistId}/>
+                <MappedGoods filteredTasks={filteredTasks} ToDoId={ToDoId}/>
             </ul>
-            <BtnPanel shoplistId={shoplistId} filter={filter}/>
+            <BtnPanel ToDoId={ToDoId} filter={filter}/>
         </StShopList>
     );
 });
