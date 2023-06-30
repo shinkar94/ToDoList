@@ -1,7 +1,7 @@
-import {API, TaskTypeAPI, TodolistType} from "../API/API";
+import {API, TaskTypeAPI, TodolistType} from "./API";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {createAppAsyncThunk} from "../common/utils/create-app-async-thunk";
-import {thunkTryCatch} from "../common/utils/thunkTryCatch";
+import {createAppAsyncThunk} from "../../common/utils/create-app-async-thunk";
+import {thunkTryCatch} from "../../common/utils/thunkTryCatch";
 export type FilterValue = "All" | "Not to buy" | "Bought"
 
 export type StateTasksType = TaskTypeAPI &{
@@ -15,6 +15,12 @@ export type TodoType = TodolistType &{
 const initialState:TodoType[] = [
 
 ]
+const ResultCode = {
+    success: 0,
+    error: 1,
+    captcha: 10
+} as const
+
 const THUNK_PREFIXES = {
     GET_TODO: 'todos/getTodo',
     GET_TASKS: 'todos/getTasks',

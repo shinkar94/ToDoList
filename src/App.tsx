@@ -2,14 +2,15 @@ import React, {useCallback, useEffect, useState} from 'react';
 import './App.css';
 import styled, {createGlobalStyle, ThemeProvider} from "styled-components";
 import {TodoList} from "./Component/TodoList";
-import {todoThunks, TodoType} from "./reducer/TodoListReducer";
-import {useAppDispatch, useAppSelector} from "./hooks/hooks";
-import {AppSelectors, TodoListSelectors} from "./reducer/selectors";
+import {todoThunks, TodoType} from "./features/ToDoList/TodoListReducer";
+import {useAppDispatch, useAppSelector} from "./common/hooks/hooks";
+import {AppSelectors, JsonTodoListSelectors, TodoListSelectors} from "./common/selectors/selectors";
 import {Header} from "./Component/Header/Header";
 import {useAutoAnimate} from "@formkit/auto-animate/react";
 import {dayTheme, ThemeType} from "./common/ThemeStyle";
 import {ToastContainer} from "react-toastify";
 import {Preloader} from "./common/Preloader";
+import {jsonThunk} from "./features/ToDoList/JsonTodoSlice";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -22,8 +23,10 @@ function App() {
     const dispatch = useAppDispatch()
     useEffect(() => {
         dispatch(todoThunks.getTodo(""))
+        dispatch(jsonThunk.getJsonTodo({countPage: '2'}))
     }, [])
     let todoList = useAppSelector(TodoListSelectors)
+    const jsonTodo = useAppSelector(JsonTodoListSelectors)
     const appState = useAppSelector(AppSelectors)
 
 
@@ -63,6 +66,19 @@ function App() {
                                           tasks={list.tasks}
                                           filter={list.filter}
                                 />
+                            )
+                        })
+                    }
+                    {
+                        jsonTodo.map(todos => {
+                            return(
+                                <>
+                                    <p>{todos.id}</p>
+                                    <p>{todos.title}</p>
+                                    <p>{todos.completed}</p>
+                                    <p>{todos.userId}</p>
+                                </>
+
                             )
                         })
                     }

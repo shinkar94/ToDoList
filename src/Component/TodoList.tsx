@@ -7,8 +7,8 @@ import {SuperButton} from "../common/SuperButton";
 import {useAutoAnimate} from "@formkit/auto-animate/react";
 import {MappedGoods} from "./mappedGoods";
 import {BtnPanel} from "./BtnPanel";
-import {useAppDispatch} from "../hooks/hooks";
-import {FilterValue, StateTasksType, todoAction, todoThunks, TodoType} from "../reducer/TodoListReducer";
+import {useAppDispatch} from "../common/hooks/hooks";
+import {FilterValue, StateTasksType, todoAction, todoThunks, TodoType} from "../features/ToDoList/TodoListReducer";
 
 type PropsType ={
     title: string

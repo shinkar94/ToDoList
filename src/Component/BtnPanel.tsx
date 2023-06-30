@@ -1,7 +1,7 @@
 import React from 'react';
-import {FilterValue, todoAction} from "../reducer/TodoListReducer";
+import {FilterValue, todoAction} from "../features/ToDoList/TodoListReducer";
 import styled from "styled-components";
-import {useAppDispatch} from "../hooks/hooks";
+import {useAppDispatch} from "../common/hooks/hooks";
 
 type PropsType = {
     ToDoId: string

@@ -3,8 +3,8 @@ import {SuperButton} from "../common/SuperButton";
 import {EditableSpan} from "../common/EditableSpan";
 import {SuperCheckBox} from "../common/SuperCheckBox";
 import styled from "styled-components";
-import {useAppDispatch} from "../hooks/hooks";
-import {StateTasksType, todoAction, todoThunks} from "../reducer/TodoListReducer";
+import {useAppDispatch} from "../common/hooks/hooks";
+import {StateTasksType, todoAction, todoThunks} from "../features/ToDoList/TodoListReducer";
 
 type PropsType = {
     ToDoId: string

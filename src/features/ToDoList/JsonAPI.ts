@@ -13,7 +13,7 @@ const newInstance = axios.create({
 })
 
 export const NewAPI = {
-    getToDoList(){
-        return newInstance.get<JsonTodoType>('todos/1')
+    getToDoList(countPage: string){
+        return newInstance.get<JsonTodoType>(`todos/${countPage}`)
     }
 }

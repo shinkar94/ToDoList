@@ -1,12 +1,14 @@
 import {Action} from "redux";
-import { todoReducer} from "../reducer/TodoListReducer";
+import { todoReducer} from "../features/ToDoList/TodoListReducer";
 import {ThunkAction} from "redux-thunk";
 import {configureStore} from "@reduxjs/toolkit";
-import {appReducer} from "../reducer/appSlice";
+import {appReducer} from "./appSlice";
+import {jsonReducer} from "../features/ToDoList/JsonTodoSlice";
 
 export const store = configureStore({
     reducer: {
         TodoList:todoReducer,
+        JsonTodo: jsonReducer,
         app:appReducer
     },
 });
